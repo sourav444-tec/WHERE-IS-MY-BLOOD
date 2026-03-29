@@ -1,0 +1,114 @@
+{
+    "inventory": {
+        "A+": 6,
+        "A-": 5,
+        "B+": 10,
+        "B-": 3,
+        "AB+": 4,
+        "AB-": 2,
+        "O+": 15,
+        "O-": 6
+    },
+    "donors": [],
+    "requests": [
+        {
+            "name": "sourav sanyal",
+            "blood_group": "A+",
+            "units": 2,
+            "phone": "9163331956",
+            "location": "serampore",
+            "pincode": "712201",
+            "purpose": "accaident",
+            "request_type": "Regular",
+            "status": "Approved (Auto)",
+            "created_at": "2026-03-29 17:15:06"
+        },
+        {
+            "name": "SOURAV SANYAL",
+            "blood_group": "A+",
+            "units": 2,
+            "phone": "09163331956",
+            "location": "serampore",
+            "pincode": "712201",
+            "purpose": "accadint",
+            "request_type": "Blood Donation",
+            "status": "Donation Pending Verification",
+            "created_at": "2026-03-29 17:22:02"
+        },
+        {
+            "name": "SOURAV SANYAL",
+            "blood_group": "A+",
+            "units": 1,
+            "phone": "09163331956",
+            "location": "serampore",
+            "pincode": "712201",
+            "purpose": "Accadint",
+            "request_type": "Blood Collection",
+            "collection_mode": "Regular",
+            "status": "Approved (Auto)",
+            "created_at": "2026-03-29 17:34:26"
+        },
+        {
+            "name": "SOURAV SANYAL",
+            "blood_group": "A+",
+            "units": 2,
+            "phone": "09163331956",
+            "location": "serampore",
+            "pincode": "712201",
+            "purpose": "accadint",
+            "request_type": "Blood Collection",
+            "collection_mode": "Regular",
+            "status": "Approved (Auto)",
+            "created_at": "2026-03-29 17:46:05"
+        },
+        {
+            "name": "Website User",
+            "blood_group": "A+",
+            "units": 1,
+            "phone": "9000012345",
+            "location": "serampore",
+            "pincode": "712201",
+            "purpose": "guyguyg",
+            "request_type": "Blood Donation",
+            "status": "Donation Pending Verification",
+            "created_at": "2026-03-29 18:54:32"
+        },
+        {
+            "name": "Website User",
+            "blood_group": "A+",
+            "units": 1,
+            "phone": "9000012345",
+            "location": "serampore",
+            "pincode": "712201",
+            "purpose": "yufdtrdbpoik",
+            "request_type": "Blood Collection",
+            "collection_mode": "Emergency",
+            "advanced_hospital": "",
+            "advanced_time": "",
+            "advanced_notes": "",
+            "status": "Approved (Auto)",
+            "created_at": "2026-03-29 19:20:25"
+        },
+        {
+            "name": "Website User",
+            "blood_group": "A+",
+            "units": 1,
+            "phone": "9000012345",
+            "location": "serampore",
+            "pincode": "712201",
+            "purpose": "lgltltnjhergoherghegarp9uhna",
+            "request_type": "Blood Donation",
+            "status": "Donation Pending Verification",
+            "created_at": "2026-03-29 19:39:46"
+        }
+    ],
+    "orders": [],
+    "users": [
+        {
+            "username": "user",
+            "password": "user123",
+            "name": "Website User",
+            "phone": "9000012345"
+        }
+    ]
+}
