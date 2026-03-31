@@ -13,21 +13,67 @@ if (!is_user_logged_in()) {
 $storage = read_storage();
 $loggedInName = get_current_user_name();
 $loggedInPhone = get_current_user_phone();
+$loggedInUsername = get_current_user_username();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = (string)($_POST['action'] ?? 'submit_request');
+
+    if ($action === 'cancel_request') {
+        $requestId = trim((string)($_POST['request_id'] ?? ''));
+
+        if ($requestId === '') {
+            flash_set('error', 'Invalid request id.');
+            header('Location: /WHERE-IS-MY-BLOOD/user/user.php');
+            exit;
+        }
+
+        $index = find_request_index_by_id($storage['requests'], $requestId);
+        if ($index < 0) {
+            flash_set('error', 'Request not found.');
+            header('Location: /WHERE-IS-MY-BLOOD/user/user.php');
+            exit;
+        }
+
+        $request = $storage['requests'][$index];
+        $owner = (string)($request['user_username'] ?? '');
+        if ($owner !== '' && $owner !== $loggedInUsername) {
+            flash_set('error', 'You can only cancel your own requests.');
+            header('Location: /WHERE-IS-MY-BLOOD/user/user.php');
+            exit;
+        }
+
+        $status = (string)($request['status'] ?? 'Pending');
+        if ($status !== 'Pending' && $status !== 'Emergency Pending' && $status !== 'Donation Pending Verification') {
+            flash_set('error', 'Only pending requests can be cancelled.');
+            header('Location: /WHERE-IS-MY-BLOOD/user/user.php');
+            exit;
+        }
+
+        $request['status'] = 'Cancelled';
+        $request['updated_at'] = now();
+        $storage['requests'][$index] = $request;
+        save_storage($storage);
+
+        flash_set('success', 'Request ' . $requestId . ' cancelled successfully.');
+        header('Location: /WHERE-IS-MY-BLOOD/user/user.php');
+        exit;
+    }
+
     $name = trim((string)($_POST['name'] ?? ''));
     $group = (string)($_POST['blood_group'] ?? '');
     $units = (int)($_POST['units'] ?? 0);
-    $phone = trim((string)($_POST['phone'] ?? ''));
+    $phone = preg_replace('/\D+/', '', trim((string)($_POST['phone'] ?? '')));
     $location = trim((string)($_POST['location'] ?? ''));
-    $pincode = trim((string)($_POST['pincode'] ?? ''));
+    $pincode = preg_replace('/\D+/', '', trim((string)($_POST['pincode'] ?? '')));
     $purpose = trim((string)($_POST['purpose'] ?? ''));
 
     if (
         $name === '' ||
-        $phone === '' ||
+        !is_string($phone) ||
+        !is_valid_phone($phone) ||
         $location === '' ||
-        $pincode === '' ||
+        !is_string($pincode) ||
+        !is_valid_pincode($pincode) ||
         $purpose === '' ||
         !in_array($group, get_blood_groups(), true) ||
         $units < 1
@@ -45,10 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'location' => $location,
         'pincode' => $pincode,
         'purpose' => $purpose,
+        'user_username' => $loggedInUsername,
     ];
 
     header('Location: /WHERE-IS-MY-BLOOD/user/request_type.php');
     exit;
+}
+
+$myRequests = [];
+foreach (array_reverse($storage['requests']) as $request) {
+    $owner = (string)($request['user_username'] ?? '');
+    $phone = (string)($request['phone'] ?? '');
+    if ($owner === $loggedInUsername || ($owner === '' && $phone === $loggedInPhone)) {
+        $myRequests[] = $request;
+    }
 }
 
 $title = 'User Portal';
@@ -58,6 +114,7 @@ require_once __DIR__ . '/../includes/header.php';
 <section class="panel">
     <h1>User Portal</h1>
     <p>Welcome <?php echo esc($loggedInName); ?>. Check blood availability and submit a blood request.</p>
+    <p><a class="link-button" href="/WHERE-IS-MY-BLOOD/user/buy_blood.php">Open Buy Blood Section</a></p>
 </section>
 
 <section class="panel">
@@ -102,7 +159,60 @@ require_once __DIR__ . '/../includes/header.php';
         <textarea id="purpose" name="purpose" rows="3" required></textarea>
 
         <button type="submit">Submit Request</button>
+        <p class="hint">Phone must be 10-15 digits. Pincode must be 6 digits.</p>
     </form>
+</section>
+
+<section class="panel">
+    <h2>My Recent Requests</h2>
+    <?php if (empty($myRequests)): ?>
+        <p>No requests found for your account yet.</p>
+    <?php else: ?>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Blood Group</th>
+                    <th>Units</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($myRequests as $request): ?>
+                    <?php $status = (string)($request['status'] ?? 'Pending'); ?>
+                    <tr>
+                        <td><?php echo esc((string)($request['request_id'] ?? '-')); ?></td>
+                        <td><?php echo esc((string)($request['blood_group'] ?? '-')); ?></td>
+                        <td><?php echo (int)($request['units'] ?? 0); ?></td>
+                        <td><?php echo esc((string)($request['request_type'] ?? '-')); ?></td>
+                        <td>
+                            <span class="status-badge <?php echo status_badge_class($status); ?>">
+                                <?php echo esc($status); ?>
+                            </span>
+                        </td>
+                        <td><?php echo esc((string)($request['created_at'] ?? '')); ?></td>
+                        <td>
+                            <?php if ($status === 'Pending' || $status === 'Emergency Pending' || $status === 'Donation Pending Verification'): ?>
+                                <form method="POST" class="inline-form compact-form">
+                                    <input type="hidden" name="action" value="cancel_request">
+                                    <input type="hidden" name="request_id" value="<?php echo esc((string)($request['request_id'] ?? '')); ?>">
+                                    <button type="submit">Cancel</button>
+                                </form>
+                            <?php else: ?>
+                                <span class="hint">No action</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <p><a class="link-button" href="/WHERE-IS-MY-BLOOD/user/history.php">View full request history</a></p>
+    <?php endif; ?>
 </section>
 
 <script>

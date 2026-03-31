@@ -15,6 +15,7 @@ $flash = flash_get();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo esc($title); ?></title>
     <link rel="stylesheet" href="/WHERE-IS-MY-BLOOD/assets/css/style.css">
+    <script src="/WHERE-IS-MY-BLOOD/assets/js/app.js" defer></script>
 </head>
 <body>
 <header class="site-header">
@@ -24,8 +25,11 @@ $flash = flash_get();
             <a href="/WHERE-IS-MY-BLOOD/index.php" class="<?php echo $active === 'home' ? 'active' : ''; ?>">Home</a>
             <a href="/WHERE-IS-MY-BLOOD/admin/login.php" class="<?php echo $active === 'admin' ? 'active' : ''; ?>">Admin</a>
             <a href="/WHERE-IS-MY-BLOOD/user/login.php" class="<?php echo $active === 'user' ? 'active' : ''; ?>">User Login</a>
+            <a href="/WHERE-IS-MY-BLOOD/user/register.php" class="<?php echo $active === 'user-register' ? 'active' : ''; ?>">User Register</a>
             <?php if (is_user_logged_in()): ?>
                 <a href="/WHERE-IS-MY-BLOOD/user/user.php" class="<?php echo $active === 'user-portal' ? 'active' : ''; ?>">User Portal</a>
+                <a href="/WHERE-IS-MY-BLOOD/user/buy_blood.php" class="<?php echo $active === 'buy-blood' ? 'active' : ''; ?>">Buy Blood</a>
+                <a href="/WHERE-IS-MY-BLOOD/user/history.php">My History</a>
                 <a href="/WHERE-IS-MY-BLOOD/user/logout.php">User Logout</a>
             <?php endif; ?>
             <a href="/WHERE-IS-MY-BLOOD/contact.php" class="<?php echo $active === 'contact' ? 'active' : ''; ?>">Contact</a>

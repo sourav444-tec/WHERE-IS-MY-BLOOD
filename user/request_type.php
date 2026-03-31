@@ -28,22 +28,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($requestType === 'Blood Donation') {
             $storage = read_storage();
-            $group = (string)($pending['blood_group'] ?? '');
-            $units = (int)($pending['units'] ?? 0);
             $status = 'Donation Pending Verification';
 
-            $storage['requests'][] = [
+            $storage['requests'][] = create_request_record([
                 'name' => (string)($pending['name'] ?? ''),
-                'blood_group' => $group,
-                'units' => $units,
+                'blood_group' => (string)($pending['blood_group'] ?? ''),
+                'units' => (int)($pending['units'] ?? 0),
                 'phone' => (string)($pending['phone'] ?? ''),
                 'location' => (string)($pending['location'] ?? ''),
                 'pincode' => (string)($pending['pincode'] ?? ''),
                 'purpose' => (string)($pending['purpose'] ?? ''),
                 'request_type' => $requestType,
                 'status' => $status,
-                'created_at' => date('Y-m-d H:i:s'),
-            ];
+                'user_username' => (string)($pending['user_username'] ?? get_current_user_username()),
+                'created_at' => now(),
+            ]);
 
             save_storage($storage);
             unset($_SESSION['pending_request']);
@@ -94,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $storage['inventory'][$group] = $availableUnits - $units;
         }
 
-        $storage['requests'][] = [
+        $storage['requests'][] = create_request_record([
             'name' => (string)($pending['name'] ?? ''),
             'blood_group' => $group,
             'units' => $units,
@@ -108,8 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'advanced_time' => $advancedTime,
             'advanced_notes' => $advancedNotes,
             'status' => $status,
-            'created_at' => date('Y-m-d H:i:s'),
-        ];
+            'user_username' => (string)($pending['user_username'] ?? get_current_user_username()),
+            'created_at' => now(),
+        ]);
 
         save_storage($storage);
         unset($_SESSION['pending_request']);

@@ -16,9 +16,18 @@ Simple Blood Bank Management System built with PHP + HTML + CSS.
   - update blood inventory by blood group
   - add donor records
   - view blood requests submitted by users
+- Admin request lifecycle controls:
+  - approve, reject, or fulfill requests
+  - auto-adjust blood inventory based on request status
+  - quick KPI cards (total requests, pending, stock units, low stock groups)
 - User portal to:
   - check available blood units
   - submit blood requests
+- User account features:
+  - user registration
+  - personalized request history with filters
+  - cancel own pending requests
+  - buy blood section with order placement and order tracking
 - Contact page with helpline details
 - Location page with blood bank center details
 
@@ -47,5 +56,8 @@ Simple Blood Bank Management System built with PHP + HTML + CSS.
 - `admin/login.php` - admin login
 - `admin/dashboard.php` - admin management panel
 - `user/user.php` - user request page
+- `user/register.php` - new user signup page
+- `user/history.php` - logged-in user request history
+- `user/buy_blood.php` - blood order purchase page
 - `contact.php` - contact details
 - `location.php` - blood bank locations

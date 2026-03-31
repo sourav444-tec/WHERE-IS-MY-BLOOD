@@ -52,5 +52,6 @@ require_once __DIR__ . '/../includes/header.php';
     </form>
 
     <p class="hint">Demo user credentials: user / user123</p>
+    <p class="hint">New here? <a href="/WHERE-IS-MY-BLOOD/user/register.php">Create a user account</a>.</p>
 </section>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
